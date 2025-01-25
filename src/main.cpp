@@ -9,11 +9,13 @@ imageInfo images[] = {
     {"/real_love.jpg", 320, 240},
 };
 
+uint8_t brightness[] = {255, 128, 64, 32, 16, 8, 4, 2, 1};
+
 void setup()
 {
   M5.begin();
   M5.Lcd.setRotation(3);
-  M5.Lcd.setBrightness(50);
+  M5.Lcd.setBrightness(brightness[0]);
 
   SPIFFS.begin();
 
@@ -21,8 +23,11 @@ void setup()
   showLogo(images[DEFAULT_INDEX]);
 }
 
-int arraySize = sizeof(images) / sizeof(images[0]);
+int imageArraySize = sizeof(images) / sizeof(images[0]);
 int buttonCount = DEFAULT_INDEX;
+
+int brightnessIndex = 1;
+int brightnessArraySize = sizeof(brightness) / sizeof(brightness[0]);
 
 void loop()
 {
@@ -33,7 +38,14 @@ void loop()
     buttonCount++;
 
     M5.Lcd.clearDisplay();
-    showLogo(images[buttonCount % arraySize]);
+    showLogo(images[buttonCount % imageArraySize]);
+  }
+
+  if (M5.BtnB.wasPressed())
+  {
+    brightnessIndex++;
+
+    M5.Lcd.setBrightness(brightness[brightnessIndex % brightnessArraySize]);
   }
 }
 
@@ -54,6 +66,6 @@ void runModeFix()
     buttonCount++;
 
     M5.Lcd.clearDisplay();
-    showLogo(images[buttonCount % arraySize]);
+    showLogo(images[buttonCount % imageArraySize]);
   }
 }
